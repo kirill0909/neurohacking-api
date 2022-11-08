@@ -18,7 +18,7 @@ func (s *Server) Run(port string) error {
 		WriteTimeout:   time.Second * 10,
 	}
 
-	return s.httpServer.ListenAndServe()
+	return s.httpServer.ListenAndServeTLS("godev.crt", "godev.key")
 }
 
 func (s *Server) Shutdown(ctx context.Context) error {
