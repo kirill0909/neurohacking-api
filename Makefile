@@ -4,5 +4,5 @@
 build:
 	go build -o .bin/neurohacking-api cmd/main.go
 
-run:build
+run: build
 	./.bin/neurohacking-api
