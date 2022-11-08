@@ -1,5 +1,8 @@
 rules
 plane
+.env
 *.db
 *.database
 *.bin
+*.crt
+*.key
