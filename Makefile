@@ -9,3 +9,6 @@ run: build
 
 kill:
 	./kill.sh
+
+ping:
+	curl -k -X GET https://localhost:8000/

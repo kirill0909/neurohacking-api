@@ -9,6 +9,10 @@ type Handler struct{}
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
+	// This endpoint is only needed to check
+	// the running server
+	router.GET("/", h.ping)
+
 	user := router.Group("/user")
 	{
 		auth := user.Group("/auth")
