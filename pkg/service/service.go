@@ -7,6 +7,7 @@ import (
 
 type User interface {
 	CreateUser(user models.User) (int, error)
+	GenerateToken(email, password string) (string, error)
 }
 
 type Category interface{}
