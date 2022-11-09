@@ -2,9 +2,16 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/kirill0909/neurohacking-api/pkg/service"
 )
 
-type Handler struct{}
+type Handler struct {
+	services *service.Service
+}
+
+func NewHandler(service *service.Service) *Handler {
+	return &Handler{services: service}
+}
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
