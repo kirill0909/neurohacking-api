@@ -28,11 +28,15 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			auth.POST("/sign-in", h.signIn)
 		}
 
-		user.PUT("/update", h.userUpdate)
-		user.DELETE("/delete", h.userDelete)
+		data := user.Group("/data", h.userIdentity)
+		{
+			data.PUT("/update", h.userUpdate)
+			data.DELETE("/delete", h.userDelete)
+		}
+
 	}
 
-	category := router.Group("/category")
+	category := router.Group("/category", h.userIdentity)
 	{
 		category.POST("/", h.createCategory)
 		category.GET("/", h.getAllCategories)
@@ -40,7 +44,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		category.PUT("/:id", h.updateCategory)
 		category.DELETE("/:id", h.deleteCategory)
 
-		word := category.Group("/:id/word")
+		word := category.Group("/:id/word", h.userIdentity)
 		{
 			word.POST("/", h.createWord)
 			word.GET("/", h.getAllWords)

@@ -25,7 +25,7 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.IndentedJSON(http.StatusOK, gin.H{
 		"id": id,
 	})
 
@@ -55,11 +55,17 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.IndentedJSON(http.StatusOK, gin.H{
 		"token": token,
 	})
 }
 
-func (h *Handler) userUpdate(c *gin.Context) {}
+func (h *Handler) userUpdate(c *gin.Context) {
+	id, _ := c.Get(userCtx)
+
+	c.IndentedJSON(http.StatusOK, gin.H{
+		"id": id,
+	})
+}
 
 func (h *Handler) userDelete(c *gin.Context) {}
