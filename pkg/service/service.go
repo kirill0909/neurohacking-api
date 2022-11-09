@@ -1,10 +1,13 @@
 package service
 
 import (
+	"github.com/kirill0909/neurohacking-api/models"
 	"github.com/kirill0909/neurohacking-api/pkg/repository"
 )
 
-type User interface{}
+type User interface {
+	CreateUser(user models.User) (int, error)
+}
 
 type Category interface{}
 
@@ -17,5 +20,7 @@ type Service struct {
 }
 
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		User: NewUserService(repos.User),
+	}
 }

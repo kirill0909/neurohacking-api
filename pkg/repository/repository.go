@@ -2,9 +2,12 @@ package repository
 
 import (
 	"github.com/jmoiron/sqlx"
+	"github.com/kirill0909/neurohacking-api/models"
 )
 
-type User interface{}
+type User interface {
+	CreateUser(user models.User) (int, error)
+}
 
 type Category interface{}
 
@@ -17,5 +20,7 @@ type Repository struct {
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{}
+	return &Repository{
+		User: NewUserPostgres(db),
+	}
 }

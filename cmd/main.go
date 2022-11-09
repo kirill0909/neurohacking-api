@@ -8,23 +8,25 @@ import (
 	"github.com/kirill0909/neurohacking-api/pkg/repository"
 	"github.com/kirill0909/neurohacking-api/pkg/service"
 	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"log"
 	"os"
 )
 
 func main() {
+	logrus.SetFormatter(new(logrus.JSONFormatter))
+
 	if err := godotenv.Load(".env"); err != nil {
-		log.Fatalf("error loading env variables: %s", err.Error())
+		logrus.Fatalf("error loading env variables: %s", err.Error())
 	}
 
 	if err := initConfig(); err != nil {
-		log.Fatalf("error initializing config: %s", err.Error())
+		logrus.Fatalf("error initializing config: %s", err.Error())
 	}
 
 	db, err := initDB()
 	if err != nil {
-		log.Fatalf("faild to initialize db: %s", err.Error())
+		logrus.Fatalf("faild to initialize db: %s", err.Error())
 	}
 
 	repos := repository.NewRepository(db)
@@ -33,7 +35,7 @@ func main() {
 
 	srv := new(server.Server)
 	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		log.Fatalf("error occured while running http server: %s", err.Error())
+		logrus.Fatalf("error occured while running http server: %s", err.Error())
 	}
 }
 
