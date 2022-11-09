@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"github.com/kirill0909/neurohacking-api"
 	"github.com/kirill0909/neurohacking-api/pkg/handler"
 	"github.com/kirill0909/neurohacking-api/pkg/repository"
@@ -10,6 +11,10 @@ import (
 )
 
 func main() {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatalf("error loading env variables: %s", err.Error())
+	}
+
 	if err := initConfig(); err != nil {
 		log.Fatalf("error initializing config: %s", err.Error())
 	}

@@ -12,3 +12,15 @@ kill:
 
 ping:
 	curl -k -X GET https://localhost:8000/
+
+dcbuild:
+	docker-compose up -q --build db
+
+up:
+	docker-compose up db -d
+
+stop:
+	docker-compose stop
+
+migrate:
+	./migrate.sh
