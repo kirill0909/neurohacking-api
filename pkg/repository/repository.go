@@ -1,6 +1,8 @@
 package repository
 
-import ()
+import (
+	"github.com/jmoiron/sqlx"
+)
 
 type User interface{}
 
@@ -14,6 +16,6 @@ type Repository struct {
 	Word
 }
 
-func NewRepository() *Repository {
+func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{}
 }
