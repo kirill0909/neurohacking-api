@@ -69,7 +69,7 @@ func checkEmptyValuesUser(user models.User) bool {
 	return true
 }
 
-func checkEmptyValuesSignInInput(input signInInput) bool {
+func checkEmptyValuesUserSignInInput(input models.UserSignInInput) bool {
 	if len(strings.TrimSpace(input.Email)) == 0 ||
 		len(strings.TrimSpace(input.Password)) == 0 {
 		return false

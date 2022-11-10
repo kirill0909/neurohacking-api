@@ -32,20 +32,15 @@ func (h *Handler) signUp(c *gin.Context) {
 
 }
 
-type signInInput struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-
 func (h *Handler) signIn(c *gin.Context) {
-	var input signInInput
+	var input models.UserSignInInput
 
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
-	if ok := checkEmptyValuesSignInInput(input); !ok {
+	if ok := checkEmptyValuesUserSignInInput(input); !ok {
 		newErrorResponse(c, http.StatusBadRequest, "invalid input value")
 		return
 	}
