@@ -76,3 +76,12 @@ func checkEmptyValuesUserSignInInput(input models.UserSignInInput) bool {
 	}
 	return true
 }
+
+func checkEmptyValueUserUpdateInput(input models.UserUpdateInput) bool {
+	if (input.Name != nil && len(strings.TrimSpace(*input.Name)) == 0) ||
+		(input.Email != nil && len(strings.TrimSpace(*input.Email)) == 0) ||
+		(input.Password != nil && len(strings.TrimSpace(*input.Password)) == 0) {
+		return false
+	}
+	return true
+}

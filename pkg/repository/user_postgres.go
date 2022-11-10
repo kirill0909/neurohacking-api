@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/kirill0909/neurohacking-api/models"
+	"log"
+	"strings"
 )
 
 type UserPostgres struct {
@@ -49,4 +51,41 @@ func (u *UserPostgres) CheckUserIdExists(id int) (bool, error) {
 	}
 
 	return result, nil
+}
+
+func (u *UserPostgres) Update(input models.UserUpdateInput, id int) error {
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if input.Name != nil {
+		setValues = append(setValues, fmt.Sprintf("name=$%d", argId))
+		args = append(args, input.Name)
+		argId++
+	}
+
+	if input.Email != nil {
+		setValues = append(setValues, fmt.Sprintf("email=$%d", argId))
+		args = append(args, input.Email)
+		argId++
+	}
+
+	if input.Password != nil {
+		setValues = append(setValues, fmt.Sprintf("password_hash=$%d", argId))
+		args = append(args, input.Password)
+	}
+
+	if len(setValues) == 0 {
+		return errors.New("No new value for set")
+	}
+
+	setQuery := strings.Join(setValues, ", ")
+
+	query := fmt.Sprintf("UPDATE %s SET %s, last_update=now() WHERE id = %d",
+		usersTable, setQuery, id)
+
+	log.Println(query)
+	_, err := u.db.Exec(query, args...)
+
+	return err
 }

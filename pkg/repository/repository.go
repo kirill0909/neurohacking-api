@@ -9,6 +9,7 @@ type User interface {
 	CreateUser(user models.User) (int, error)
 	GetUser(email, password string) (models.User, error)
 	CheckUserIdExists(id int) (bool, error)
+	Update(input models.UserUpdateInput, id int) error
 }
 
 type Category interface{}

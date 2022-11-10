@@ -10,6 +10,7 @@ type User interface {
 	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)
 	CheckUserIdExists(id int) (bool, error)
+	Update(input models.UserUpdateInput, id int) error
 }
 
 type Category interface{}

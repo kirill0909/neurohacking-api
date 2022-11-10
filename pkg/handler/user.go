@@ -63,8 +63,24 @@ func (h *Handler) userUpdate(c *gin.Context) {
 		return
 	}
 
+	var input models.UserUpdateInput
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if ok := checkEmptyValueUserUpdateInput(input); !ok {
+		newErrorResponse(c, http.StatusBadRequest, "The value should not be empty")
+		return
+	}
+
+	if err := h.services.User.Update(input, id); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"id": id,
+		"staus": id,
 	})
 }
 

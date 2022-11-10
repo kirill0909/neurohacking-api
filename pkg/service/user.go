@@ -84,6 +84,13 @@ func (u *UserService) CheckUserIdExists(id int) (bool, error) {
 	return u.repo.CheckUserIdExists(id)
 }
 
+func (u *UserService) Update(input models.UserUpdateInput, id int) error {
+	if input.Password != nil {
+		*input.Password = generatePasswordHash(*input.Password)
+	}
+	return u.repo.Update(input, id)
+}
+
 func generatePasswordHash(password string) string {
 	hash := sha256.New()
 	hash.Write([]byte(password))
