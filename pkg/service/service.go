@@ -11,6 +11,7 @@ type User interface {
 	ParseToken(token string) (int, error)
 	CheckUserIdExists(id int) (bool, error)
 	Update(input models.UserUpdateInput, id int) error
+	Delete(userId int) error
 }
 
 type Category interface{}

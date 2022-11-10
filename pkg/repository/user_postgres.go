@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/kirill0909/neurohacking-api/models"
-	"log"
 	"strings"
 )
 
@@ -84,8 +83,13 @@ func (u *UserPostgres) Update(input models.UserUpdateInput, id int) error {
 	query := fmt.Sprintf("UPDATE %s SET %s, last_update=now() WHERE id = %d",
 		usersTable, setQuery, id)
 
-	log.Println(query)
 	_, err := u.db.Exec(query, args...)
 
+	return err
+}
+
+func (u *UserPostgres) Delete(userId int) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE id=$1", usersTable)
+	_, err := u.db.Exec(query, userId)
 	return err
 }

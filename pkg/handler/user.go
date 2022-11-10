@@ -75,13 +75,28 @@ func (h *Handler) userUpdate(c *gin.Context) {
 	}
 
 	if err := h.services.User.Update(input, id); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"staus": id,
+		"staus": "ok",
 	})
 }
 
-func (h *Handler) userDelete(c *gin.Context) {}
+func (h *Handler) userDelete(c *gin.Context) {
+	userId, err := GetUserId(c)
+	if err != nil {
+		logrus.Println(err)
+		return
+	}
+
+	if err := h.services.User.Delete(userId); err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+}

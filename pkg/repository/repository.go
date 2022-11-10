@@ -10,6 +10,7 @@ type User interface {
 	GetUser(email, password string) (models.User, error)
 	CheckUserIdExists(id int) (bool, error)
 	Update(input models.UserUpdateInput, id int) error
+	Delete(userId int) error
 }
 
 type Category interface{}

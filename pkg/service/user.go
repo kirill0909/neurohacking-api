@@ -91,6 +91,17 @@ func (u *UserService) Update(input models.UserUpdateInput, id int) error {
 	return u.repo.Update(input, id)
 }
 
+func (u *UserService) Delete(userId int) error {
+	exists, err := u.CheckUserIdExists(userId)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return errors.New("user does not exists")
+	}
+	return u.repo.Delete(userId)
+}
+
 func generatePasswordHash(password string) string {
 	hash := sha256.New()
 	hash.Write([]byte(password))
