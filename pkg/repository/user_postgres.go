@@ -38,3 +38,15 @@ func (u *UserPostgres) GetUser(email, password string) (models.User, error) {
 
 	return user, nil
 }
+
+func (u *UserPostgres) CheckUserIdExists(id int) (bool, error) {
+	var result bool
+	query := fmt.Sprintf("SELECT EXISTS(SELECT 1 FROM %s WHERE id=$1)", usersTable)
+
+	row := u.db.QueryRow(query, id)
+	if err := row.Scan(&result); err != nil {
+		return false, err
+	}
+
+	return result, nil
+}

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/kirill0909/neurohacking-api/models"
 	"net/http"
@@ -32,6 +33,22 @@ func (h *Handler) userIdentity(c *gin.Context) {
 	}
 
 	c.Set(userCtx, userId)
+}
+
+func GetUserId(c *gin.Context) (int, error) {
+	id, ok := c.Get(userCtx)
+	if !ok {
+		newErrorResponse(c, http.StatusUnauthorized, "user id not found")
+		return 0, errors.New("user id not found")
+	}
+
+	idInt, ok := id.(int)
+	if !ok {
+		newErrorResponse(c, http.StatusUnauthorized, "user id is of invalid type")
+		return 0, errors.New("user id is of invalid type")
+	}
+
+	return idInt, nil
 }
 
 func validateAuthHeader(headerParts []string) bool {

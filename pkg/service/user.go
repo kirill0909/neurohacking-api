@@ -68,8 +68,20 @@ func (u *UserService) ParseToken(accessToken string) (int, error) {
 		return 0, errors.New("token claims are not of the type *tokenClaims")
 	}
 
+	exists, err := u.CheckUserIdExists(claims.UserId)
+	if err != nil {
+		return 0, err
+	}
+	if !exists {
+		return 0, errors.New("user does not exists")
+	}
+
 	return claims.UserId, nil
 
+}
+
+func (u *UserService) CheckUserIdExists(id int) (bool, error) {
+	return u.repo.CheckUserIdExists(id)
 }
 
 func generatePasswordHash(password string) string {

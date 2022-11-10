@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/kirill0909/neurohacking-api/models"
+	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -61,7 +62,11 @@ func (h *Handler) signIn(c *gin.Context) {
 }
 
 func (h *Handler) userUpdate(c *gin.Context) {
-	id, _ := c.Get(userCtx)
+	id, err := GetUserId(c)
+	if err != nil {
+		logrus.Println(err)
+		return
+	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{
 		"id": id,
