@@ -308,3 +308,65 @@ func TestHandler_userUpdate(t *testing.T) {
 	}
 
 }
+
+func TestHandler_userDelete(t *testing.T) {
+	type mockBehavior func(s *service_mocks.MockUser, userId int)
+
+	testTable := []struct {
+		name                 string
+		userId               int
+		mockBehavior         mockBehavior
+		expectedStatusCode   int
+		expectedResponseBody string
+	}{
+		{
+			name: "Ok",
+			mockBehavior: func(s *service_mocks.MockUser, userId int) {
+				s.EXPECT().Delete(userId).Return(nil)
+			},
+			expectedStatusCode:   200,
+			expectedResponseBody: `{"status":"ok"}`,
+		},
+		{
+			name: "User Does Not Exists",
+			mockBehavior: func(s *service_mocks.MockUser, userId int) {
+				s.EXPECT().Delete(userId).Return(errors.New("user does not exists"))
+			},
+			expectedStatusCode:   400,
+			expectedResponseBody: `{"message":"user does not exists"}`,
+		},
+		{
+			name: "Service Failure",
+			mockBehavior: func(s *service_mocks.MockUser, userId int) {
+				s.EXPECT().Delete(userId).Return(errors.New("something went wrong"))
+			},
+			expectedStatusCode:   500,
+			expectedResponseBody: `{"message":"something went wrong"}`,
+		},
+	}
+
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			controller := gomock.NewController(t)
+			controller.Finish()
+
+			user := service_mocks.NewMockUser(controller)
+			testCase.mockBehavior(user, testCase.userId)
+
+			service := &service.Service{User: user}
+			handler := NewHandler(service)
+
+			recorder := httptest.NewRecorder()
+			request := httptest.NewRequest("DELETE", "/user/data/delete", nil)
+
+			testContext, _ := gin.CreateTestContext(recorder)
+			testContext.Request = request
+			testContext.Set(userCtx, testCase.userId)
+
+			handler.userDelete(testContext)
+
+			assert.Equal(t, testCase.expectedStatusCode, recorder.Code)
+			assert.Equal(t, testCase.expectedResponseBody, recorder.Body.String())
+		})
+	}
+}

@@ -96,11 +96,15 @@ func (h *Handler) userDelete(c *gin.Context) {
 	}
 
 	if err := h.services.User.Delete(userId); err != nil {
+		if err.Error() == "user does not exists" {
+			newErrorResponse(c, http.StatusBadRequest, err.Error())
+			return
+		}
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
 }
