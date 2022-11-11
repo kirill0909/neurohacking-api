@@ -26,7 +26,7 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"id": id,
 	})
 
@@ -51,7 +51,7 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"token": token,
 	})
 }
