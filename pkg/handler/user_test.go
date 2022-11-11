@@ -163,3 +163,148 @@ func TestHandler_signIn(t *testing.T) {
 	}
 
 }
+
+func TestHandler_userUpdate(t *testing.T) {
+	type mockBehavior func(s *service_mocks.MockUser,
+		input models.UserUpdateInput, userId int)
+
+	args := struct {
+		Name     string
+		Email    string
+		Password string
+	}{
+		Name:     "NewName",
+		Email:    "newemail@gmail.com",
+		Password: "NewPass",
+	}
+
+	testTable := []struct {
+		name                 string
+		userId               int
+		inputBody            string
+		inputUpdate          models.UserUpdateInput
+		mockBehavior         mockBehavior
+		expectedStatusCode   int
+		expectedResponseBody string
+	}{
+		{
+			name:      "Ok All Fields",
+			userId:    1,
+			inputBody: `{"name":"NewName", "email":"newemail@gmail.com", "password":"NewPass"}`,
+			inputUpdate: models.UserUpdateInput{
+				Name:     &args.Name,
+				Email:    &args.Email,
+				Password: &args.Password,
+			},
+			mockBehavior: func(s *service_mocks.MockUser, input models.UserUpdateInput, userId int) {
+				s.EXPECT().Update(input, userId).Return(nil)
+			},
+			expectedStatusCode:   200,
+			expectedResponseBody: `{"status":"ok"}`,
+		},
+		{
+			name:      "Ok Only Name",
+			userId:    1,
+			inputBody: `{"name":"NewName"}`,
+			inputUpdate: models.UserUpdateInput{
+				Name: &args.Name,
+			},
+			mockBehavior: func(s *service_mocks.MockUser, input models.UserUpdateInput, userId int) {
+				s.EXPECT().Update(input, userId).Return(nil)
+			},
+			expectedStatusCode:   200,
+			expectedResponseBody: `{"status":"ok"}`,
+		},
+		{
+			name:      "Ok Only Email",
+			userId:    1,
+			inputBody: `{"email":"newemail@gmail.com"}`,
+			inputUpdate: models.UserUpdateInput{
+				Email: &args.Email,
+			},
+			mockBehavior: func(s *service_mocks.MockUser, input models.UserUpdateInput, userId int) {
+				s.EXPECT().Update(input, userId).Return(nil)
+			},
+			expectedStatusCode:   200,
+			expectedResponseBody: `{"status":"ok"}`,
+		},
+		{
+			name:      "Ok Only Password",
+			userId:    1,
+			inputBody: `{"password":"NewPass"}`,
+			inputUpdate: models.UserUpdateInput{
+				Password: &args.Password,
+			},
+			mockBehavior: func(s *service_mocks.MockUser, input models.UserUpdateInput, userId int) {
+				s.EXPECT().Update(input, userId).Return(nil)
+			},
+			expectedStatusCode:   200,
+			expectedResponseBody: `{"status":"ok"}`,
+		},
+		{
+			name:      "Empty Value",
+			userId:    1,
+			inputBody: `{"name":" ", "email":"newemail@gmail.com", "password":"NewPass"}`,
+			inputUpdate: models.UserUpdateInput{
+				Email:    &args.Email,
+				Password: &args.Password,
+			},
+			mockBehavior:         func(s *service_mocks.MockUser, input models.UserUpdateInput, userId int) {},
+			expectedStatusCode:   400,
+			expectedResponseBody: `{"message":"The value should not be empty"}`,
+		},
+		{
+			name:        "All Value Is Empty",
+			userId:      1,
+			inputBody:   `{}`,
+			inputUpdate: models.UserUpdateInput{},
+			mockBehavior: func(s *service_mocks.MockUser, input models.UserUpdateInput, userId int) {
+				s.EXPECT().Update(input, userId).Return(errors.New("no new value for set"))
+			},
+			expectedStatusCode:   400,
+			expectedResponseBody: `{"message":"no new value for set"}`,
+		},
+		{
+			name:      "Service Failure",
+			userId:    1,
+			inputBody: `{"name":"NewName", "email":"newemail@gmail.com", "password":"NewPass"}`,
+			inputUpdate: models.UserUpdateInput{
+				Name:     &args.Name,
+				Email:    &args.Email,
+				Password: &args.Password,
+			},
+			mockBehavior: func(s *service_mocks.MockUser, input models.UserUpdateInput, userId int) {
+				s.EXPECT().Update(input, userId).Return(errors.New("Something went wrong"))
+			},
+			expectedStatusCode:   500,
+			expectedResponseBody: `{"message":"Something went wrong"}`,
+		},
+	}
+
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			controller := gomock.NewController(t)
+			controller.Finish()
+
+			user := service_mocks.NewMockUser(controller)
+			testCase.mockBehavior(user, testCase.inputUpdate, testCase.userId)
+
+			service := &service.Service{User: user}
+			handler := NewHandler(service)
+
+			recorder := httptest.NewRecorder()
+			request := httptest.NewRequest("PUT", "/user/data/update",
+				bytes.NewBufferString(testCase.inputBody))
+
+			testContext, _ := gin.CreateTestContext(recorder)
+			testContext.Request = request
+			testContext.Set(userCtx, testCase.userId)
+
+			handler.userUpdate(testContext)
+
+			assert.Equal(t, testCase.expectedStatusCode, recorder.Code)
+			assert.Equal(t, testCase.expectedResponseBody, recorder.Body.String())
+		})
+	}
+
+}

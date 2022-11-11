@@ -75,12 +75,16 @@ func (h *Handler) userUpdate(c *gin.Context) {
 	}
 
 	if err := h.services.User.Update(input, id); err != nil {
+		if err.Error() == "no new value for set" {
+			newErrorResponse(c, http.StatusBadRequest, err.Error())
+			return
+		}
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{
-		"staus": "ok",
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
 	})
 }
 
