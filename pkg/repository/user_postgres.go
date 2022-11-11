@@ -16,7 +16,7 @@ func NewUserPostgres(db *sqlx.DB) *UserPostgres {
 	return &UserPostgres{db: db}
 }
 
-func (u *UserPostgres) CreateUser(user models.User) (int, error) {
+func (u *UserPostgres) Create(user models.User) (int, error) {
 	var id int
 	query := fmt.Sprintf(`INSERT INTO %s (name, email, password_hash, date_creation, last_update)
 	 VALUES ($1, $2, $3, now(), now()) RETURNING id`, usersTable)
@@ -52,7 +52,7 @@ func (u *UserPostgres) CheckUserIdExists(id int) (bool, error) {
 	return result, nil
 }
 
-func (u *UserPostgres) Update(input models.UserUpdateInput, id int) error {
+func (u *UserPostgres) Update(input models.UserUpdateInput, userId int) error {
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)
 	argId := 1
@@ -81,7 +81,7 @@ func (u *UserPostgres) Update(input models.UserUpdateInput, id int) error {
 	setQuery := strings.Join(setValues, ", ")
 
 	query := fmt.Sprintf("UPDATE %s SET %s, last_update=now() WHERE id = %d",
-		usersTable, setQuery, id)
+		usersTable, setQuery, userId)
 
 	_, err := u.db.Exec(query, args...)
 

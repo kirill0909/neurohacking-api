@@ -49,19 +49,19 @@ func (mr *MockUserMockRecorder) CheckUserIdExists(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckUserIdExists", reflect.TypeOf((*MockUser)(nil).CheckUserIdExists), id)
 }
 
-// CreateUser mocks base method.
-func (m *MockUser) CreateUser(user models.User) (int, error) {
+// Create mocks base method.
+func (m *MockUser) Create(user models.User) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateUser", user)
+	ret := m.ctrl.Call(m, "Create", user)
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CreateUser indicates an expected call of CreateUser.
-func (mr *MockUserMockRecorder) CreateUser(user interface{}) *gomock.Call {
+// Create indicates an expected call of Create.
+func (mr *MockUserMockRecorder) Create(user interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUser)(nil).CreateUser), user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockUser)(nil).Create), user)
 }
 
 // Delete mocks base method.
@@ -109,17 +109,17 @@ func (mr *MockUserMockRecorder) ParseToken(token interface{}) *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockUser) Update(input models.UserUpdateInput, id int) error {
+func (m *MockUser) Update(input models.UserUpdateInput, userId int) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", input, id)
+	ret := m.ctrl.Call(m, "Update", input, userId)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockUserMockRecorder) Update(input, id interface{}) *gomock.Call {
+func (mr *MockUserMockRecorder) Update(input, userId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockUser)(nil).Update), input, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockUser)(nil).Update), input, userId)
 }
 
 // MockCategory is a mock of Category interface.

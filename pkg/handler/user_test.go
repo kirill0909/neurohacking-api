@@ -29,7 +29,7 @@ func TestHandler_signUp(t *testing.T) {
 			inputBody: `{"name":"John Down", "email":"john@gmail.com", "password":"JohnPass"}`,
 			inputUser: models.User{Name: "John Down", Email: "john@gmail.com", Password: "JohnPass"},
 			mockBehavior: func(s *service_mocks.MockUser, user models.User) {
-				s.EXPECT().CreateUser(user).Return(1, nil)
+				s.EXPECT().Create(user).Return(1, nil)
 			},
 			expectedStatusCode:   200,
 			expectedResponseBody: `{"id":1}`,
@@ -55,7 +55,7 @@ func TestHandler_signUp(t *testing.T) {
 			inputBody: `{"name":"John Down", "email":"john@gmail.com", "password":"JohnPass"}`,
 			inputUser: models.User{Name: "John Down", Email: "john@gmail.com", Password: "JohnPass"},
 			mockBehavior: func(s *service_mocks.MockUser, user models.User) {
-				s.EXPECT().CreateUser(user).Return(0, errors.New("something went wrong"))
+				s.EXPECT().Create(user).Return(0, errors.New("something went wrong"))
 			},
 			expectedStatusCode:   500,
 			expectedResponseBody: `{"message":"something went wrong"}`,

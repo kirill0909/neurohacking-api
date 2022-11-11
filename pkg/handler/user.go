@@ -20,7 +20,7 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.User.CreateUser(input)
+	id, err := h.services.User.Create(input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -57,7 +57,7 @@ func (h *Handler) signIn(c *gin.Context) {
 }
 
 func (h *Handler) userUpdate(c *gin.Context) {
-	id, err := GetUserId(c)
+	userId, err := GetUserId(c)
 	if err != nil {
 		logrus.Println(err)
 		return
@@ -74,7 +74,7 @@ func (h *Handler) userUpdate(c *gin.Context) {
 		return
 	}
 
-	if err := h.services.User.Update(input, id); err != nil {
+	if err := h.services.User.Update(input, userId); err != nil {
 		if err.Error() == "no new value for set" {
 			newErrorResponse(c, http.StatusBadRequest, err.Error())
 			return

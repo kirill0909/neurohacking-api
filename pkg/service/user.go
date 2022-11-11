@@ -28,9 +28,9 @@ type tokenClaims struct {
 	UserId int `json:"user_id"`
 }
 
-func (u *UserService) CreateUser(user models.User) (int, error) {
+func (u *UserService) Create(user models.User) (int, error) {
 	user.Password = generatePasswordHash(user.Password)
-	return u.repo.CreateUser(user)
+	return u.repo.Create(user)
 }
 
 func (u *UserService) GenerateToken(email, password string) (string, error) {
@@ -84,11 +84,11 @@ func (u *UserService) CheckUserIdExists(id int) (bool, error) {
 	return u.repo.CheckUserIdExists(id)
 }
 
-func (u *UserService) Update(input models.UserUpdateInput, id int) error {
+func (u *UserService) Update(input models.UserUpdateInput, userId int) error {
 	if input.Password != nil {
 		*input.Password = generatePasswordHash(*input.Password)
 	}
-	return u.repo.Update(input, id)
+	return u.repo.Update(input, userId)
 }
 
 func (u *UserService) Delete(userId int) error {

@@ -8,11 +8,11 @@ import (
 //go:generate mockgen -source=service.go -destination=mocks/mock.go
 
 type User interface {
-	CreateUser(user models.User) (int, error)
+	Create(user models.User) (int, error)
 	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)
 	CheckUserIdExists(id int) (bool, error)
-	Update(input models.UserUpdateInput, id int) error
+	Update(input models.UserUpdateInput, userId int) error
 	Delete(userId int) error
 }
 

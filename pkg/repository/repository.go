@@ -6,10 +6,10 @@ import (
 )
 
 type User interface {
-	CreateUser(user models.User) (int, error)
+	Create(user models.User) (int, error)
 	GetUser(email, password string) (models.User, error)
 	CheckUserIdExists(id int) (bool, error)
-	Update(input models.UserUpdateInput, id int) error
+	Update(input models.UserUpdateInput, userId int) error
 	Delete(userId int) error
 }
 
