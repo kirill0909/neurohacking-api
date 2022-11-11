@@ -13,7 +13,9 @@ type User interface {
 	Delete(userId int) error
 }
 
-type Category interface{}
+type Category interface {
+	Create(category models.Category, userId int) (models.Category, error)
+}
 
 type Word interface{}
 
@@ -25,6 +27,7 @@ type Repository struct {
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		User: NewUserPostgres(db),
+		User:     NewUserPostgres(db),
+		Category: NewCategoryPostgres(db),
 	}
 }
