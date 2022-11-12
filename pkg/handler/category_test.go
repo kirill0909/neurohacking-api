@@ -95,3 +95,62 @@ func TestHandler_createCategory(t *testing.T) {
 		})
 	}
 }
+
+func TestHandler_getAllCategories(t *testing.T) {
+	type mockBehavior func(s *service_mocks.MockCategory, userId int)
+
+	testTable := []struct {
+		name                 string
+		userId               int
+		mockBehavior         mockBehavior
+		expectedStatusCode   int
+		expectedBodyResponse string
+	}{
+		{
+			name:   "Ok",
+			userId: 1,
+			mockBehavior: func(s *service_mocks.MockCategory, userId int) {
+				s.EXPECT().GetAll(userId).Return([]models.Category{
+					{Id: 1, UID: 1, Name: "NewCategory", DateCreation: "2022-11-12T14:58:21.109514Z", LastUpdate: "2022-11-12T14:58:21.109514Z"},
+				}, nil)
+			},
+			expectedStatusCode:   200,
+			expectedBodyResponse: `{"categories":[{"Id":1,"UID":1,"name":"NewCategory","DateCreation":"2022-11-12T14:58:21.109514Z","LastUpdate":"2022-11-12T14:58:21.109514Z"}]}`,
+		},
+		{
+			name:   "Service Failure",
+			userId: 1,
+			mockBehavior: func(s *service_mocks.MockCategory, userId int) {
+				s.EXPECT().GetAll(userId).Return([]models.Category{}, errors.New("something went wrong"))
+			},
+			expectedStatusCode:   500,
+			expectedBodyResponse: `{"message":"something went wrong"}`,
+		},
+	}
+
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			controller := gomock.NewController(t)
+			controller.Finish()
+
+			category := service_mocks.NewMockCategory(controller)
+			testCase.mockBehavior(category, testCase.userId)
+
+			service := &service.Service{Category: category}
+			handler := NewHandler(service)
+
+			recorder := httptest.NewRecorder()
+			request := httptest.NewRequest("GET", "/category", nil)
+
+			testContext, _ := gin.CreateTestContext(recorder)
+			testContext.Request = request
+			testContext.Set(userCtx, 1)
+
+			handler.getAllCategories(testContext)
+
+			assert.Equal(t, testCase.expectedStatusCode, recorder.Code)
+			assert.Equal(t, testCase.expectedBodyResponse, recorder.Body.String())
+
+		})
+	}
+}
