@@ -65,12 +65,12 @@ func (h *Handler) userUpdate(c *gin.Context) {
 
 	var input models.UserUpdateInput
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
 	if ok := checkEmptyValueUserUpdateInput(input); !ok {
-		newErrorResponse(c, http.StatusBadRequest, "The value should not be empty")
+		newErrorResponse(c, http.StatusBadRequest, "invalid input value")
 		return
 	}
 

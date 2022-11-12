@@ -145,6 +145,95 @@ func (m *MockCategory) EXPECT() *MockCategoryMockRecorder {
 	return m.recorder
 }
 
+// CheckCategoryIdExists mocks base method.
+func (m *MockCategory) CheckCategoryIdExists(userId, categoryId int) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckCategoryIdExists", userId, categoryId)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// CheckCategoryIdExists indicates an expected call of CheckCategoryIdExists.
+func (mr *MockCategoryMockRecorder) CheckCategoryIdExists(userId, categoryId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckCategoryIdExists", reflect.TypeOf((*MockCategory)(nil).CheckCategoryIdExists), userId, categoryId)
+}
+
+// Create mocks base method.
+func (m *MockCategory) Create(category models.Category, userId int) (models.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", category, userId)
+	ret0, _ := ret[0].(models.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockCategoryMockRecorder) Create(category, userId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockCategory)(nil).Create), category, userId)
+}
+
+// Delete mocks base method.
+func (m *MockCategory) Delete(userId, categoryId int) (models.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", userId, categoryId)
+	ret0, _ := ret[0].(models.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockCategoryMockRecorder) Delete(userId, categoryId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCategory)(nil).Delete), userId, categoryId)
+}
+
+// GetAll mocks base method.
+func (m *MockCategory) GetAll(userId int) ([]models.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAll", userId)
+	ret0, _ := ret[0].([]models.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAll indicates an expected call of GetAll.
+func (mr *MockCategoryMockRecorder) GetAll(userId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockCategory)(nil).GetAll), userId)
+}
+
+// GetById mocks base method.
+func (m *MockCategory) GetById(userId, categoryId int) (models.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetById", userId, categoryId)
+	ret0, _ := ret[0].(models.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetById indicates an expected call of GetById.
+func (mr *MockCategoryMockRecorder) GetById(userId, categoryId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetById", reflect.TypeOf((*MockCategory)(nil).GetById), userId, categoryId)
+}
+
+// Update mocks base method.
+func (m *MockCategory) Update(input models.CategoryUpdateInput, userId, categoryId int) (models.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", input, userId, categoryId)
+	ret0, _ := ret[0].(models.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockCategoryMockRecorder) Update(input, userId, categoryId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockCategory)(nil).Update), input, userId, categoryId)
+}
+
 // MockWord is a mock of Word interface.
 type MockWord struct {
 	ctrl     *gomock.Controller

@@ -251,7 +251,7 @@ func TestHandler_userUpdate(t *testing.T) {
 			},
 			mockBehavior:         func(s *service_mocks.MockUser, input models.UserUpdateInput, userId int) {},
 			expectedStatusCode:   400,
-			expectedResponseBody: `{"message":"The value should not be empty"}`,
+			expectedResponseBody: `{"message":"invalid input value"}`,
 		},
 		{
 			name:        "All Value Is Empty",
