@@ -115,4 +115,27 @@ func (h *Handler) updateCategory(c *gin.Context) {
 	})
 }
 
-func (h *Handler) deleteCategory(c *gin.Context) {}
+func (h *Handler) deleteCategory(c *gin.Context) {
+	userId, err := GetUserId(c)
+	if err != nil {
+		logrus.Println(err)
+		return
+	}
+
+	categoryId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id parameter")
+		return
+	}
+
+	deletedCategory, err := h.services.Category.Delete(userId, categoryId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"category": deletedCategory,
+	})
+
+}

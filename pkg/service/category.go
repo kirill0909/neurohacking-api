@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/kirill0909/neurohacking-api/models"
 	"github.com/kirill0909/neurohacking-api/pkg/repository"
 	"strings"
@@ -28,5 +29,19 @@ func (c *CategoryService) GetById(userId, categoryId int) (models.Category, erro
 }
 
 func (c *CategoryService) Update(input models.CategoryUpdateInput, userId, categoryId int) (models.Category, error) {
+	if ok := c.repo.CheckCategoryIdExists(userId, categoryId); !ok {
+		return models.Category{}, errors.New("user does not have this category")
+	}
 	return c.repo.Update(input, userId, categoryId)
+}
+
+func (c *CategoryService) Delete(userId, categoryId int) (models.Category, error) {
+	if ok := c.repo.CheckCategoryIdExists(userId, categoryId); !ok {
+		return models.Category{}, errors.New("user does not have this category")
+	}
+	return c.repo.Delete(userId, categoryId)
+}
+
+func (c *CategoryService) CheckCategoryIdExists(userId, categoryId int) bool {
+	return c.repo.CheckCategoryIdExists(userId, categoryId)
 }

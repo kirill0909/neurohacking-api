@@ -58,3 +58,26 @@ func (c *CategoryPostgres) Update(input models.CategoryUpdateInput, userId, cate
 	return updatedCategory, err
 
 }
+
+func (c *CategoryPostgres) CheckCategoryIdExists(userId, categoryId int) bool {
+	var result bool
+	query := fmt.Sprintf("SELECT EXISTS(SELECT 1 FROM %s WHERE user_id=$1 AND id=$2)", categoriesTable)
+
+	row := c.db.QueryRow(query, userId, categoryId)
+	row.Scan(&result)
+
+	return result
+}
+
+func (c *CategoryPostgres) Delete(userId, categoryId int) (models.Category, error) {
+	var deletedCategory models.Category
+
+	query := fmt.Sprintf(`DELETE FROM %s WHERE user_id=$1 AND id=$2 RETURNING id, user_id, name,
+	date_creation, last_update`, categoriesTable)
+
+	row := c.db.QueryRow(query, userId, categoryId)
+	err := row.Scan(&deletedCategory.Id, &deletedCategory.UID, &deletedCategory.Name, &deletedCategory.DateCreation,
+		&deletedCategory.LastUpdate)
+
+	return deletedCategory, err
+}
