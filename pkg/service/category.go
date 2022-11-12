@@ -26,3 +26,7 @@ func (c *CategoryService) GetAll(userId int) ([]models.Category, error) {
 func (c *CategoryService) GetById(userId, categoryId int) (models.Category, error) {
 	return c.repo.GetById(userId, categoryId)
 }
+
+func (c *CategoryService) Update(input models.CategoryUpdateInput, userId, categoryId int) (models.Category, error) {
+	return c.repo.Update(input, userId, categoryId)
+}

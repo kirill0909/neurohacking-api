@@ -92,3 +92,10 @@ func checkEmptyValueCategoryInput(input models.Category) bool {
 	}
 	return true
 }
+
+func checkEmptyValueCategoryUpdateInput(input models.CategoryUpdateInput) bool {
+	if input.Name != nil && len(strings.TrimSpace(*input.Name)) == 0 {
+		return false
+	}
+	return true
+}

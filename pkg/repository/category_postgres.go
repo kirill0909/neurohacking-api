@@ -44,3 +44,17 @@ func (c *CategoryPostgres) GetById(userId, categoryId int) (models.Category, err
 
 	return category, err
 }
+
+func (c *CategoryPostgres) Update(input models.CategoryUpdateInput, userId, categoryId int) (models.Category, error) {
+	var updatedCategory models.Category
+
+	query := fmt.Sprintf(`UPDATE %s SET name=$1, last_update=now() WHERE user_id=$2 AND id=$3
+	RETURNING id, user_id, name, date_creation, last_update`, categoriesTable)
+
+	row := c.db.QueryRow(query, *input.Name, userId, categoryId)
+	err := row.Scan(&updatedCategory.Id, &updatedCategory.UID, &updatedCategory.Name, &updatedCategory.DateCreation,
+		&updatedCategory.LastUpdate)
+
+	return updatedCategory, err
+
+}

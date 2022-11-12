@@ -7,3 +7,7 @@ type Category struct {
 	DateCreation string `db:"date_creation"`
 	LastUpdate   string `db:"last_update"`
 }
+
+type CategoryUpdateInput struct {
+	Name *string `json:"name" binding:"required"`
+}
