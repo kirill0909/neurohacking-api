@@ -309,3 +309,66 @@ func TestHandler_updateCategory(t *testing.T) {
 		})
 	}
 }
+
+func TestHandler_deleteCategory(t *testing.T) {
+	type mockBehavior func(s *service_mocks.MockCategory, userId, categoryId int)
+
+	testTable := []struct {
+		name                 string
+		userId               int
+		categoryId           int
+		mockBehavior         mockBehavior
+		expectedStatusCode   int
+		expectedBodyResponse string
+	}{
+		{
+			name:       "Ok",
+			userId:     1,
+			categoryId: 1,
+			mockBehavior: func(s *service_mocks.MockCategory, userId, categoryId int) {
+				s.EXPECT().Delete(userId, categoryId).Return(models.Category{
+					Id: 1, UID: 1, Name: "DeletedCategory", DateCreation: "2022-11-12T14:58:21.109514Z", LastUpdate: "2022-11-12T14:58:21.109514Z"},
+					nil)
+			},
+			expectedStatusCode:   200,
+			expectedBodyResponse: `{"category":{"Id":1,"UID":1,"name":"DeletedCategory","DateCreation":"2022-11-12T14:58:21.109514Z","LastUpdate":"2022-11-12T14:58:21.109514Z"}}`,
+		},
+		{
+			name:       "Service Failure",
+			userId:     1,
+			categoryId: 1,
+			mockBehavior: func(s *service_mocks.MockCategory, userId, categoryId int) {
+				s.EXPECT().Delete(userId, categoryId).Return(models.Category{}, errors.New("something went wrong"))
+			},
+			expectedStatusCode:   500,
+			expectedBodyResponse: `{"message":"something went wrong"}`,
+		},
+	}
+
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			controller := gomock.NewController(t)
+			controller.Finish()
+
+			category := service_mocks.NewMockCategory(controller)
+			testCase.mockBehavior(category, testCase.userId, testCase.categoryId)
+
+			service := &service.Service{Category: category}
+			handler := NewHandler(service)
+
+			recorder := httptest.NewRecorder()
+			request := httptest.NewRequest("DELETE", "/category/", nil)
+
+			testContext, _ := gin.CreateTestContext(recorder)
+			testContext.Request = request
+			testContext.Set(userCtx, 1)
+			testContext.AddParam("id", fmt.Sprintf("%d", testCase.categoryId))
+
+			handler.deleteCategory(testContext)
+
+			assert.Equal(t, testCase.expectedStatusCode, recorder.Code)
+			assert.Equal(t, testCase.expectedBodyResponse, recorder.Body.String())
+
+		})
+	}
+}
