@@ -36,7 +36,24 @@ func (h *Handler) createCategory(c *gin.Context) {
 	})
 }
 
-func (h *Handler) getAllCategories(c *gin.Context) {}
+func (h *Handler) getAllCategories(c *gin.Context) {
+	userId, err := GetUserId(c)
+	if err != nil {
+		logrus.Println(err)
+		return
+	}
+
+	categories, err := h.services.Category.GetAll(userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"categories": categories,
+	})
+
+}
 
 func (h *Handler) getCategoryById(c *gin.Context) {}
 

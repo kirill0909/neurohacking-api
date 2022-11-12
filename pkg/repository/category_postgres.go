@@ -28,3 +28,15 @@ func (c *CategoryPostgres) Create(category models.Category, userId int) (models.
 
 	return insertedCategory, nil
 }
+
+func (c *CategoryPostgres) GetAll(userId int) ([]models.Category, error) {
+	var categories []models.Category
+
+	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1", categoriesTable)
+	err := c.db.Select(&categories, query, userId)
+	if err != nil {
+		return []models.Category{}, err
+	}
+
+	return categories, nil
+}

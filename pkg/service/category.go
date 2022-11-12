@@ -18,3 +18,7 @@ func (c *CategoryService) Create(category models.Category, userId int) (models.C
 	category.Name = strings.Title(strings.ToLower(category.Name))
 	return c.repo.Create(category, userId)
 }
+
+func (c *CategoryService) GetAll(userId int) ([]models.Category, error) {
+	return c.repo.GetAll(userId)
+}
