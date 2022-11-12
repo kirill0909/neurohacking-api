@@ -22,7 +22,10 @@ type Category interface {
 	Delete(userId, categoryId int) (models.Category, error)
 }
 
-type Word interface{}
+type Word interface {
+	Create(word models.Word, userId, categoryId int) (models.Word, error)
+	CheckCategoryOwner(userId, categoryId int) bool
+}
 
 type Repository struct {
 	User
@@ -34,5 +37,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		User:     NewUserPostgres(db),
 		Category: NewCategoryPostgres(db),
+		Word:     NewWordPostgres(db),
 	}
 }

@@ -100,6 +100,13 @@ func checkEmptyValueCategoryUpdateInput(input models.CategoryUpdateInput) bool {
 	return true
 }
 
+func checkEmptyValueWord(input models.Word) bool {
+	if len(strings.TrimSpace(input.Name)) == 0 {
+		return false
+	}
+	return true
+}
+
 func stringToPointer(str string) *string {
 	return &str
 }

@@ -25,7 +25,10 @@ type Category interface {
 	Delete(userId, categoryId int) (models.Category, error)
 }
 
-type Word interface{}
+type Word interface {
+	Create(word models.Word, userId, categoryId int) (models.Word, error)
+	CheckCategoryOwner(userId, categoryId int) bool
+}
 
 type Service struct {
 	User
@@ -37,5 +40,6 @@ func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		User:     NewUserService(repos.User),
 		Category: NewCategoryService(repos.Category),
+		Word:     NewWordService(repos.Word),
 	}
 }
