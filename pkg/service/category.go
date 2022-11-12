@@ -22,3 +22,7 @@ func (c *CategoryService) Create(category models.Category, userId int) (models.C
 func (c *CategoryService) GetAll(userId int) ([]models.Category, error) {
 	return c.repo.GetAll(userId)
 }
+
+func (c *CategoryService) GetById(userId, categoryId int) (models.Category, error) {
+	return c.repo.GetById(userId, categoryId)
+}

@@ -40,3 +40,15 @@ func (c *CategoryPostgres) GetAll(userId int) ([]models.Category, error) {
 
 	return categories, nil
 }
+
+func (c *CategoryPostgres) GetById(userId, categoryId int) (models.Category, error) {
+	var category models.Category
+
+	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1 AND id=$2", categoriesTable)
+	err := c.db.Get(&category, query, userId, categoryId)
+	if err != nil {
+		return models.Category{}, err
+	}
+
+	return category, nil
+}

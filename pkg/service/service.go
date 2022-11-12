@@ -19,6 +19,7 @@ type User interface {
 type Category interface {
 	Create(category models.Category, userId int) (models.Category, error)
 	GetAll(userId int) ([]models.Category, error)
+	GetById(userId, categoryId int) (models.Category, error)
 }
 
 type Word interface{}
