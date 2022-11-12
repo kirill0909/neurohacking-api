@@ -99,3 +99,7 @@ func checkEmptyValueCategoryUpdateInput(input models.CategoryUpdateInput) bool {
 	}
 	return true
 }
+
+func stringToPointer(str string) *string {
+	return &str
+}
