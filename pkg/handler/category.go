@@ -69,7 +69,7 @@ func (h *Handler) getCategoryById(c *gin.Context) {
 		return
 	}
 
-	category, err := h.services.GetById(userId, categoryId)
+	category, err := h.services.Category.GetById(userId, categoryId)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

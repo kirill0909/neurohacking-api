@@ -29,6 +29,8 @@ type Word interface {
 	Create(word models.Word, userId, categoryId int) (models.Word, error)
 	CheckCategoryOwner(userId, categoryId int) bool
 	GetAll(userId, categoryId int) ([]models.Word, error)
+	GetById(userId, categoryId, wordId int) (models.Word, error)
+	Update(input models.WordUpdateInput, userId, categoryId, wordId int) (models.Word, error)
 }
 
 type Service struct {

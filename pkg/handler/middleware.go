@@ -107,6 +107,13 @@ func checkEmptyValueWord(input models.Word) bool {
 	return true
 }
 
+func checkEmptyValueWordUpdateInput(input models.WordUpdateInput) bool {
+	if len(strings.TrimSpace(input.Name)) == 0 {
+		return false
+	}
+	return true
+}
+
 func stringToPointer(str string) *string {
 	return &str
 }

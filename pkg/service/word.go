@@ -33,3 +33,18 @@ func (w *WordService) GetAll(userId, categoryId int) ([]models.Word, error) {
 	}
 	return w.repo.GetAll(userId, categoryId)
 }
+
+func (w *WordService) GetById(userId, categoryId, wordId int) (models.Word, error) {
+	if ok := w.repo.CheckCategoryOwner(userId, categoryId); !ok {
+		return models.Word{}, errors.New("This user is not the owner of this category")
+	}
+	return w.repo.GetById(userId, categoryId, wordId)
+}
+
+func (w *WordService) Update(input models.WordUpdateInput, userId, categoryId, wordId int) (models.Word, error) {
+	if ok := w.repo.CheckCategoryOwner(userId, categoryId); !ok {
+		return models.Word{}, errors.New("This user is not the owner of this category")
+	}
+
+	return w.repo.Update(input, userId, categoryId, wordId)
+}

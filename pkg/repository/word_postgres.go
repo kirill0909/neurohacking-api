@@ -45,3 +45,25 @@ func (w *WordPostgres) GetAll(userId, categoryId int) ([]models.Word, error) {
 
 	return words, err
 }
+
+func (w *WordPostgres) GetById(userId, categoryId, wordId int) (models.Word, error) {
+	var word models.Word
+
+	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1 AND category_id=$2 AND id=$3", wordsTable)
+	err := w.db.Get(&word, query, userId, categoryId, wordId)
+
+	return word, err
+}
+
+func (w *WordPostgres) Update(input models.WordUpdateInput, userId, categoryId, wordId int) (models.Word, error) {
+	var updatedWord models.Word
+
+	query := fmt.Sprintf(`UPDATE %s SET name=$1, last_update=now() WHERE user_id=$2 AND category_id=$3 AND id=$4
+	RETURNING id, user_id, category_id, name, date_creation, last_update`, wordsTable)
+
+	row := w.db.QueryRow(query, input.Name, userId, categoryId, wordId)
+	err := row.Scan(&updatedWord.Id, &updatedWord.UID, &updatedWord.CategoryId, &updatedWord.Name,
+		&updatedWord.DateCreation, &updatedWord.LastUpdate)
+
+	return updatedWord, err
+}
