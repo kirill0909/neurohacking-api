@@ -3,7 +3,7 @@
 
 
 build:
-	sudo docker-compose up -q --build  app
+	sudo docker-compose up --build app
 
 up:
 	sudo docker-compose up -d
