@@ -11,3 +11,17 @@ services:
       - TZ=Europe/Moscow
     ports:
       - 5432:5432
+
+  app:
+    build: ./
+    command: ./wait-for-postgres.sh db ./.bin/neurohacking-api
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - GIN_MODE=release
+      - SOLT=${SOLT}
+      - SIGNATURE_KEY=${SIGNATURE_KEY}
+

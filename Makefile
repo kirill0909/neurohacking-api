@@ -1,26 +1,18 @@
 .PHONY:
 .SILENT:
 
+
 build:
-	go build -o .bin/neurohacking-api cmd/main.go
-
-run: build
-	./run.sh
-
-kill:
-	./kill.sh
-
-ping:
-	curl -k -X GET https://localhost:8000/
-
-dcbuild:
-	docker-compose up -q --build db
+	sudo docker-compose up -q --build  app
 
 up:
-	docker-compose up db -d
+	sudo docker-compose up -d
 
 stop:
 	docker-compose stop
+
+ping:
+	curl -k -X GET https://localhost:8000/
 
 migrate:
 	./migrate.sh
