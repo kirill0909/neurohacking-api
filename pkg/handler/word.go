@@ -23,7 +23,7 @@ func (h *Handler) createWord(c *gin.Context) {
 
 	var input models.Word
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, "invalid input boyd")
+		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
