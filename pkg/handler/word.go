@@ -43,7 +43,30 @@ func (h *Handler) createWord(c *gin.Context) {
 	})
 }
 
-func (h *Handler) getAllWords(c *gin.Context) {}
+func (h *Handler) getAllWords(c *gin.Context) {
+	userId, err := GetUserId(c)
+	if err != nil {
+		logrus.Println(err)
+		return
+	}
+
+	categoryId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id parameter")
+		return
+	}
+
+	words, err := h.services.Word.GetAll(userId, categoryId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"words": words,
+	})
+
+}
 
 func (h *Handler) getWordById(c *gin.Context) {}
 

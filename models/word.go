@@ -2,9 +2,9 @@ package models
 
 type Word struct {
 	Id           int
-	UID          int
-	CategoryId   int
+	UID          int    `db:"user_id"`
+	CategoryId   int    `db:"category_id"`
 	Name         string `json:"name" binding:"required"`
-	DateCreation string
-	LastUpdate   string
+	DateCreation string `db:"date_creation"`
+	LastUpdate   string `db:"last_update"`
 }

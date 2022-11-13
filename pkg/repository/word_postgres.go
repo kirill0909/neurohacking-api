@@ -36,3 +36,12 @@ func (w *WordPostgres) CheckCategoryOwner(userId, categoryId int) bool {
 
 	return result
 }
+
+func (w *WordPostgres) GetAll(userId, categoryId int) ([]models.Word, error) {
+	var words []models.Word
+
+	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1 AND category_id=$2", wordsTable)
+	err := w.db.Select(&words, query, userId, categoryId)
+
+	return words, err
+}

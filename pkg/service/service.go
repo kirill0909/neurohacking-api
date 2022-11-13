@@ -28,6 +28,7 @@ type Category interface {
 type Word interface {
 	Create(word models.Word, userId, categoryId int) (models.Word, error)
 	CheckCategoryOwner(userId, categoryId int) bool
+	GetAll(userId, categoryId int) ([]models.Word, error)
 }
 
 type Service struct {
