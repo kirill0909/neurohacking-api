@@ -139,4 +139,33 @@ func (h *Handler) updateWord(c *gin.Context) {
 	})
 }
 
-func (h *Handler) deleteWord(c *gin.Context) {}
+func (h *Handler) deleteWord(c *gin.Context) {
+	userId, err := GetUserId(c)
+	if err != nil {
+		logrus.Println(err)
+		return
+	}
+
+	categoryId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id parameter")
+		return
+	}
+
+	wordId, err := strconv.Atoi(c.Param("word_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid word id parameter")
+		return
+	}
+
+	deletedWord, err := h.services.Word.Delete(userId, categoryId, wordId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"word": deletedWord,
+	})
+
+}

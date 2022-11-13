@@ -48,3 +48,11 @@ func (w *WordService) Update(input models.WordUpdateInput, userId, categoryId, w
 
 	return w.repo.Update(input, userId, categoryId, wordId)
 }
+
+func (w *WordService) Delete(userId, categoryId, wordId int) (models.Word, error) {
+	if ok := w.repo.CheckCategoryOwner(userId, categoryId); !ok {
+		return models.Word{}, errors.New("This user is not the owner of this category")
+	}
+
+	return w.repo.Delete(userId, categoryId, wordId)
+}

@@ -28,6 +28,7 @@ type Word interface {
 	GetAll(userId, categoryId int) ([]models.Word, error)
 	GetById(userId, categoryId, wordId int) (models.Word, error)
 	Update(input models.WordUpdateInput, userId, categoryId, wordId int) (models.Word, error)
+	Delete(userId, categoryId, wordId int) (models.Word, error)
 }
 
 type Repository struct {

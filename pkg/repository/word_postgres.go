@@ -67,3 +67,16 @@ func (w *WordPostgres) Update(input models.WordUpdateInput, userId, categoryId, 
 
 	return updatedWord, err
 }
+
+func (w *WordPostgres) Delete(userId, categoryId, wordId int) (models.Word, error) {
+	var deletedWord models.Word
+
+	query := fmt.Sprintf(`DELETE FROM %s WHERE user_id=$1 AND category_id=$2 AND id=$3 RETURNING
+	id, user_id, category_id, name, date_creation, last_update`, wordsTable)
+
+	row := w.db.QueryRow(query, userId, categoryId, wordId)
+	err := row.Scan(&deletedWord.Id, &deletedWord.UID, &deletedWord.CategoryId, &deletedWord.Name,
+		&deletedWord.DateCreation, &deletedWord.LastUpdate)
+
+	return deletedWord, err
+}
